@@ -1,5 +1,6 @@
 streamlit
 firebase-admin
-langchain
 google-cloud-storage
-google-generativeai
+langchain-classic
+langchain-google-genai
+langchain-core
