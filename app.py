@@ -84,32 +84,20 @@ def process_resource_with_agents(resource_data):
 
 # ====================== AUTHENTICATION (Hackathon Mode) ======================
 if 'user' not in st.session_state:
-    st.subheader("🔐 Login / Signup")
-    choice = st.radio("Choose action", ["Login", "Signup"], horizontal=True)
+    st.subheader("🔐 Login / Signup (Demo Mode)")
+    st.info("For demo: Use any email and password (6+ characters)")
     email = st.text_input("Email")
     password = st.text_input("Password", type="password")
 
     if st.button("Submit"):
-        if not email or not password:
-            st.error("Please fill both fields")
+        if len(password) < 6:
+            st.error("Password must be at least 6 characters")
+        elif email and password:
+            st.success(f"Welcome, {email}!")
+            st.session_state.user = {"email": email}
+            st.rerun()
         else:
-            try:
-                if choice == "Signup":
-                    user = auth.create_user(email=email, password=password)
-                    st.success("Account created successfully!")
-                    st.info("Now log in with the same credentials.")
-                else:
-                    auth.get_user_by_email(email)  # Checks if user exists
-                    st.success(f"Welcome back, {email}!")
-                    st.session_state.user = {"email": email}
-                    st.rerun()
-            except Exception as e:
-                if "EMAIL_ALREADY_EXISTS" in str(e):
-                    st.error("Email already registered. Try logging in.")
-                elif "INVALID_EMAIL" in str(e):
-                    st.error("Invalid email format.")
-                else:
-                    st.error(f"Error: {str(e)}")
+            st.error("Fill both fields")
 else:
     st.success(f"Logged in as: {st.session_state.user['email']}")
     if st.button("Logout"):
@@ -209,4 +197,5 @@ elif not search_query:
 
 # ====================== FOOTER ======================
 st.markdown("---")
+
 st.caption("Made with  for Hack Ananta 2025 | Aligning with **UN SDG 4: Quality Education**")
